@@ -43,6 +43,12 @@ public class IndexController {
         return userService.getUsers();
     }
 
+    @GetMapping(path = "/sync")
+    public ResponseEntity synchronize() {
+        userService.synchronize();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @PostMapping(path = "/user")
     public ResponseEntity save(@RequestBody User user) {
         userService.save(user);

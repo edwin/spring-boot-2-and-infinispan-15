@@ -5,6 +5,9 @@ import org.infinispan.api.annotations.indexing.Indexed;
 import org.infinispan.protostream.annotations.ProtoFactory;
 import org.infinispan.protostream.annotations.ProtoField;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -15,8 +18,11 @@ import java.io.Serializable;
  * @author Muhammad Edwin < edwin at redhat dot com >
  * 12 Oct 2024 13:39
  */
+@Entity
+@Table(name="T_USER")
 @Indexed
 public class User implements Serializable {
+    @Id
     private String name;
 
     private Integer age;

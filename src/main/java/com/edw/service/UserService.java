@@ -1,6 +1,7 @@
 package com.edw.service;
 
 import com.edw.model.User;
+import com.edw.repository.UserRepository;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.Search;
@@ -24,11 +25,19 @@ public class UserService {
 
     private RemoteCacheManager remoteCacheManager;
 
+    private UserRepository userRepository;
+
     @Autowired
-    public UserService(RemoteCacheManager remoteCacheManager) {
+    public UserService(RemoteCacheManager remoteCacheManager, UserRepository userRepository) {
         this.remoteCacheManager = remoteCacheManager;
+        this.userRepository = userRepository;
     }
 
+    /**
+     * this is to get users from cache
+     *
+     * @return List<User> users
+     */
     public List<User> getUsers() {
         final RemoteCache cache = remoteCacheManager.getCache("user");
         QueryFactory queryFactory = Search.getQueryFactory(cache);
@@ -38,8 +47,21 @@ public class UserService {
         return query.execute().list();
     }
 
+    /**
+     * this is to save user model to database (h2)
+     * @param user
+     */
     public void save(User user) {
+        userRepository.save(user);
+    }
+
+
+    /**
+     * this is to sync user models from database (h2) to cache
+     */
+    public void synchronize() {
         final RemoteCache cache = remoteCacheManager.getCache("user");
-        cache.put(user.getName(), user);
+        userRepository.findAll()
+                .forEach(user -> cache.put(user.getName(), user));
     }
 }

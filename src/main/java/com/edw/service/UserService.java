@@ -9,6 +9,7 @@ import org.infinispan.query.dsl.Query;
 import org.infinispan.query.dsl.QueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * 12 Oct 2024 14:02
  */
 @Service
+@Transactional
 public class UserService {
 
     private RemoteCacheManager remoteCacheManager;
